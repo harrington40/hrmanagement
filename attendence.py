@@ -1,7 +1,8 @@
 from zk import ZK, const
-
+import json  # Import the json module at the top of your script
 from utility import write_to_db
 from utility import format_attendance_records
+
 class Attendance:
     def __init__(self, ip, port=4370, timeout=5):
         self.ip = ip
@@ -154,7 +155,7 @@ class Attendance:
             list: A list of dictionaries, each containing a user_id, timestamp, and status of an attendance record.
         """
         if not self.conn:
-            print("Device not connected")
+            print("Device not connected:Error 202")
             return []
 
         attendance_records = []
@@ -166,7 +167,7 @@ class Attendance:
                 if user_id is None or record.user_id == user_id:
                     attendance_records.append({
                         'user_id': record.user_id,
-                        'timestamp': record.timestamp,
+                        'timestamp': record.timestamp,  # Assuming you handle datetime serialization elsewhere
                         'status': record.status
                     })
             return format_attendance_records(attendance_records)
@@ -174,6 +175,7 @@ class Attendance:
         except Exception as e:
             print(f"Error fetching attendance data: {e}")
             return []
+
 
 
     def get_user_data_with_attendance(self, user):
@@ -209,21 +211,85 @@ class Attendance:
         return user_data
 
 
+    def get_and_store_attendance(self):
+        """Fetch attendance records from the device and store them in the database."""
+        if not self.conn:
+            print("Device not connected")
+            return []
+
+        try:
+            attendance = self.conn.get_attendance()
+            for record in attendance:
+                
+                # Prepare data for insertion
+                data = (record.user_id, record.timestamp, record.status)
+
+                # Define your SQL insert query
+                insert_query = """
+                INSERT INTO Attendance (employeeId, timeStamp, status)
+                VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE status=VALUES(status) 
+                """
+
+                # Insert the record into the database
+                write_to_db(insert_query, data)
+
+            print("Attendance records have been stored in the database.")
+        except Exception as e:
+            print(f"Error fetching or storing attendance data: {e}")
+
+
+    def create_device_connection(ip_address, port=4370, timeout=5):
+        """Establishes connection to the ZKTeco device.
+
+        Args:
+        ip_address (str): IP address of the ZKTeco device.
+        port (int): Port number for the connection.
+        timeout (int): Connection timeout in seconds.
+
+        Returns:
+        zklib.ZK: An instance of the ZK class representing the device connection.
+        """
+        zk = ZK(ip_address, port=port, timeout=timeout)
+        try:
+            conn = zk.connect()
+            conn.disable_device()  # Disable the device to perform operations
+            return conn
+        except Exception as e:
+            print(f"Error connecting to device: {e}")
+            return None
+
+
+
+
+    def clear_attendance(ip_address, port=4370, timeout=5):
+        """Clears all attendance records from the ZKTeco device.
+
+        Args:
+        ip_address (str): IP address of the ZKTeco device.
+        port (int): Port number for the connection.
+        timeout (int): Connection timeout in seconds.
+
+        Returns:
+        bool: True if the attendance records were successfully cleared, False otherwise.
+        """
+        conn = attendance_system.create_device_connection(ip_address, port, timeout)
+        if conn is None:
+            return False
+    
+        try:
+            conn.clear_attendance()  # Clear attendance records
+            conn.enable_device()  # Re-enable the device after operation
+            conn.disconnect()
+            return True
+        except Exception as e:
+            print(f"Error clearing attendance records: {e}")
+            conn.enable_device()
+            conn.disconnect()
+            return False
+
+
 # Example usage
 attendance_system = Attendance('192.168.0.201', port=4370)
-
-if attendance_system.connect():
-    specified_user_id = 1  # Replace with the user ID generated from the device
-    attendance_system.read_fingerprint(specified_user_id)
-    user = attendance_system.get_user(specified_user_id)
-    if user:
-        print(f"User Found: {user}")
-    else:
-        print("User not found.")
-
-    attendance_system.disconnect()
-else:
-    print("Failed to connect to the ZKTeco device.")
 
 if attendance_system.connect():
     all_users = attendance_system.get_all_users()
@@ -247,6 +313,8 @@ if attendance_system.connect():
         print("No users found in the system.")
 else:
     print("Failed to connect to the ZKTeco device.")
+
+
 specified_user_id = 1
 if attendance_system.verify_fingerprint_existence(specified_user_id):
     print("Fingerprint exists for specified user.")
@@ -257,13 +325,36 @@ else:
 
 if attendance_system.connect():
     attendance_records = attendance_system.get_attendance(user_id =None)
+    attendance_system.disconnect()
+    attendance_system.connect()
     for record in attendance_records:
         print(record)
    
 else:
     print("Failed to connect to the device.")
 
-user = {'uid': '123', 'name': 'John Doe', 'privilege': 'Admin', 'password': 'password123', 'group_id': '1', 'user_id': '123'}
-user_data_with_attendance = attendance_system.get_user_data_with_attendance(user)
-print(user_data_with_attendance)
-attendance_system.disconnect()
+
+user_timeStamp = attendance_system.get_attendance(user_id=886)
+        
+if user_timeStamp:
+        for time in user_timeStamp:
+            # Create the insert query using the data
+            data_tuple = ( time['User ID'], time['TimeStamp'], time['Status'])
+         
+     
+            insert_query = "INSERT INTO Attendance (clockIn, employeeId, status) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE `status`=VAKUES(status)"
+            #data_tuple = ('2023-11-10T05:31:52','2023-11-10T05:31:52', 202, 'Check-in')
+            #data_tuple ={'User ID': '202', 'Timestamp': '2023-11-10 05:31:52', 'Status': 'Check-in (1)'}
+            # Insert the attendance data into the database
+           # data_tuple = ( time['User ID'], time['TimeStamp'], time['Status'])
+            write_to_db(insert_query, data_tuple)
+
+
+if attendance_system.connect():
+    attendance_system.get_and_store_attendance()
+    #attendance_system.disconnect()
+else:
+    print("Failed to connect to the device.")
+
+
+

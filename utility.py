@@ -49,7 +49,15 @@ def update_db(query, data):
         cursor.close()
         connection.close()
 
-
+def check_existing_record(cursor, employeeId, clockIn, status):
+    """Check if an identical record already exists in the database."""
+    query = """
+    SELECT EXISTS(
+        SELECT 1 FROM Attendance 
+        WHERE employeeId = %s AND clockIn = %s AND status = %s
+    )"""
+    cursor.execute(query, (employeeId, clockIn, status))
+    return cursor.fetchone()[0]
 
 
 # Function definitions for database interactions (create_db_connection, write_to_db, etc.) remain unchanged
@@ -62,22 +70,26 @@ def format_attendance_records(attendance_records):
         attendance_records (list): A list of dictionaries, each containing the keys 'user_id', 'timestamp', and 'status'.
 
     Returns:
-        list: A list of strings, each a formatted string representation of an attendance record.
+        list: A list of dictionaries, each a formatted representation of an attendance record.
     """
     formatted_records = []
     status_meaning = {1: "Check-in", 2: "Check-out"}
 
-    for record in attendance_records:
-        # Convert the timestamp to a more readable format
-        timestamp_str = record['timestamp'].strftime("%Y-%m-%d %H:%M:%S")
+    for  record in attendance_records:
+        
+        # Convert the timestamp to a more readable format if necessary
+        timestamp_str = record['timestamp'].strftime("%Y-%m-%d %H:%M:%S") if hasattr(record['timestamp'], 'strftime') else record['timestamp']
 
         # Determine the status meaning
         record_status = status_meaning.get(record['status'], "Unknown")
 
-        # Create a formatted string with the attendance record information
-        formatted_record = (f"User ID: {record['user_id']}, "
-                            f"Timestamp: {timestamp_str}, "
-                            f"Status: {record_status} ({record['status']})")
+        # Create a dictionary for the formatted attendance record information
+        formatted_record = {
+            'User ID': record['user_id'],
+            'Timestamp': timestamp_str,
+            'Status': f"{record_status} ({record['status']})",
+          
+        }
         formatted_records.append(formatted_record)
 
     return formatted_records
