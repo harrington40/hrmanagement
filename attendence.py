@@ -3,6 +3,27 @@ import json  # Import the json module at the top of your script
 from utility import write_to_db
 from utility import format_attendance_records
 
+
+
+#   Data	            Value
+#   Attendance records	    1
+#   Fingerprint templates	2
+#   None	                3
+#   Operation records	    4
+#   User information	    5
+#############################
+
+# The verification state codification is:
+
+# Verification state	Value
+# Check in (default)	0
+# Check out	1
+# Break out	2
+# Break in	3
+# OT in	4
+# OT out	5
+#####################
+
 class Attendance:
     def __init__(self, ip, port=4370, timeout=5):
         self.ip = ip

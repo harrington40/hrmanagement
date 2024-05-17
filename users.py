@@ -160,25 +160,33 @@ class Enrollment:
             self.conn.enable_device()
             self.conn.disconnect()
 
+
+# Constants for user privileges
+class const:
+    USER_DEFAULT = 0
+
+# Initialization of the Enrollment system
 enrollment_system = Enrollment(ip="192.168.0.201", port=4370, timeout=5)
+
 if enrollment_system.connect():
     print("Connected to the device successfully.")
 else:
     print("Failed to connect to the device.")
-    # Exit or handle connection failure appropriately
-# Example user information
-uid = 1  # Device-specific numeric user ID, adjust as needed
-name = "userTest"
-privilege = const.USER_DEFAULT  # Use appropriate privilege level
-password = ""  # Assuming no password is set
-group_id = "8055"  # Assuming no group ID is set
-user_id = "8089"  # A custom string user ID
-card = 1043801067  # Assuming no card is used
 
-# Set or update the user information
-success = enrollment_system.set_user_info(uid, name, privilege, password, group_id, user_id, card)
-if success:
-    print(f"User information for {name} ({user_id}) set successfully.")
-else:
-    print("Failed to set user information.")
+# User data to register
+users = [
+    {"uid": 1, "name": "Moses M. Taylor", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "3426", "card": 1043801058},
+    {"uid": 1, "name": "Edwin Saye Wolokia", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "1685", "card": 1043801065},
+    {"uid": 1, "name": "Jonetta Kou Moor", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "2326", "card": 1043801069},
+    {"uid": 1, "name": "Andrew Peters Jackson", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "4327", "card": 1043801065},
+    {"uid": 1, "name": "Deborah Borbor Teah", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "4389", "card": 1043809067}
+]
+
+for user in users:
+    success = enrollment_system.set_user_info(**user)
+    if success:
+        print(f"User information for {user['name']} ({user['user_id']}) set successfully.")
+    else:
+        print("Failed to set user information.")
+
 enrollment_system.disconnect()
