@@ -174,12 +174,13 @@ else:
     print("Failed to connect to the device.")
 
 # User data to register
+# User data to register with unique UIDs
 users = [
     {"uid": 1, "name": "Moses M. Taylor", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "3426", "card": 1043801058},
-    {"uid": 1, "name": "Edwin Saye Wolokia", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "1685", "card": 1043801065},
-    {"uid": 1, "name": "Jonetta Kou Moor", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "2326", "card": 1043801069},
-    {"uid": 1, "name": "Andrew Peters Jackson", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "4327", "card": 1043801065},
-    {"uid": 1, "name": "Deborah Borbor Teah", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "4389", "card": 1043809067}
+    {"uid": 2, "name": "Edwin Saye Wolokia", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "1685", "card": 1043801065},
+    {"uid": 3, "name": "Jonetta Kou Moor", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "2326", "card": 1043801069},
+    {"uid": 4, "name": "Andrew Peters Jackson", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "4327", "card": 1043801065},
+    {"uid": 5, "name": "Deborah Borbor Teah", "privilege": const.USER_DEFAULT, "password": "", "group_id": "8055", "user_id": "4389", "card": 1043809067}
 ]
 
 for user in users:
@@ -188,5 +189,3 @@ for user in users:
         print(f"User information for {user['name']} ({user['user_id']}) set successfully.")
     else:
         print("Failed to set user information.")
-
-enrollment_system.disconnect()
