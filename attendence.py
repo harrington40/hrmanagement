@@ -322,13 +322,16 @@ if attendance_system.connect():
             # Define your SQL insert query with the actual table name and columns
             insert_query = "INSERT IGNORE INTO ClockInOut (uid, name, privilege, password, group_id, user_id) \
                VALUES (%s, %s, %s, %s, %s, %s)"
-
-
             # Create a tuple with the values extracted from the user_data dictionary
             data = ( user['uid'], user['name'], user['privilege'], user['password'], user['group_id'], user['user_id'])
-
             # Insert the user data into the database
             write_to_db(insert_query, data)
+
+                     
+            # Define your SQL insert query with the actual table name and columns
+            insert_query = "INSERT IGNORE INTO Attendence(uid, name, privilege, password, group_id, user_id) \
+               VALUES (%s, %s, %s, %s, %s, %s)"
+
 
     else:
         print("No users found in the system.")
@@ -373,7 +376,7 @@ if user_timeStamp:
 
 if attendance_system.connect():
     attendance_system.get_and_store_attendance()
-    #attendance_system.disconnect()
+    attendance_system.disconnect()
 else:
     print("Failed to connect to the device.")
 

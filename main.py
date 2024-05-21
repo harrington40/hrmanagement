@@ -57,6 +57,36 @@ def get_attendance_data():
             print(f"Error fetching or storing attendance data: {e}")
 
 
+def store_attendance_data(self, user_id=None):
+    """Fetches and stores attendance records in the 'attendance' database table."""
+    if not self.conn:
+        print("Device not connected")
+        return
+
+    try:
+        # Get attendance records, formatted
+        attendance_records = self.get_attendance(user_id)
+        
+        for record in attendance_records:
+            # Prepare data for insertion
+            data = (record['User ID'], record['Timestamp'], record['Status'])
+
+            # Define SQL insert query, adjust column names as per your database schema
+            insert_query = """
+            INSERT INTO attendance (user_id, timestamp, status)
+            VALUES (%s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                timestamp=VALUES(timestamp), status=VALUES(status)
+            """
+
+            # Insert the record into the database
+            write_to_db(insert_query, data)
+
+        print("Attendance records have been stored in the database.")
+    except Exception as e:
+        print(f"Error fetching or storing attendance data: {e}")
+
+
 
 # Run database operations in separate threads
 thread_list = [
