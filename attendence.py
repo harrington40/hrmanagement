@@ -247,7 +247,7 @@ class Attendance:
 
                 # Define your SQL insert query
                 insert_query = """
-                INSERT INTO Attendance (employeeId, timeStamp, status)
+                INSERT INTO AttendanceCalculations (clockoutRule, timestamp, status)
                 VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE status=VALUES(status) 
                 """
 

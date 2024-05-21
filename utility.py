@@ -49,14 +49,14 @@ def update_db(query, data):
         cursor.close()
         connection.close()
 
-def check_existing_record(cursor, employeeId, clockIn, status):
+def check_existing_record(cursor, clockoutRule, clockinRule, status):
     """Check if an identical record already exists in the database."""
     query = """
     SELECT EXISTS(
-        SELECT 1 FROM Attendance 
-        WHERE employeeId = %s AND clockIn = %s AND status = %s
+        SELECT 1 FROM AttendanceCalculations 
+        WHERE clockoutRule = %s AND clockinRule = %s AND status = %s
     )"""
-    cursor.execute(query, (employeeId, clockIn, status))
+    cursor.execute(query, (clockoutRule, clockinRule, status))
     return cursor.fetchone()[0]
 
 
@@ -102,7 +102,10 @@ if __name__ == "__main__":
     # Sample record for demonstration
     attendance_records = [
     {'user_id': '1', 'timestamp': datetime(2023, 10, 19, 1, 37, 54), 'status': 1},
-    {'user_id': '1', 'timestamp': datetime(2023, 10, 20, 8, 15, 30), 'status': 2}
+    {'user_id': '1', 'timestamp': datetime(2023, 10, 20, 8, 15, 30), 'status': 2},
+     {'user_id': '168353', 'timestamp': datetime(2023, 10, 20, 8, 15, 30), 'status': 2},
+
+
 ]
 
     formatted_records = format_attendance_records(attendance_records)
