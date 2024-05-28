@@ -433,3 +433,8 @@ class ZKBase:
         except (ValueError, TypeError):
             return default
 
+# Assuming the ZKBase class is properly defined and imported as discussed earlier
+
+# Create an instance of ZKBase
+
+

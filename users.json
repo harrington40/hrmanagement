@@ -1,0 +1,90 @@
+[
+    {
+        "uid": 1,
+        "name": "Moses M. Taylor",
+        "privilege": 0,
+        "password": "",
+        "group_id": "8055",
+        "user_id": "3426",
+        "card": 1043801058,
+        "department": "Sales",
+        "role": "Manager",
+        "fingerprints": {
+            "1": "template1",
+            "2": "template2"
+        }
+    },
+    {
+        "uid": 2,
+        "name": "Edwin Saye Wolokia",
+        "privilege": 0,
+        "password": "",
+        "group_id": "8055",
+        "user_id": "1685",
+        "card": 1043801065,
+        "department": "Marketing",
+        "role": "Team Lead",
+        "fingerprints": {
+            "1": "template3",
+            "2": "template4"
+        }
+    },
+    {
+        "uid": 3,
+        "name": "Jonetta Kou Moor",
+        "privilege": 0,
+        "password": "",
+        "group_id": "8055",
+        "user_id": "2326",
+        "card": 1043801069,
+        "department": "HR",
+        "role": "Associate",
+        "fingerprints": {
+            "1": "template5"
+        }
+    },
+    {
+        "uid": 4,
+        "name": "Andrew Peters Jackson",
+        "privilege": 0,
+        "password": "",
+        "group_id": "8055",
+        "user_id": "4327",
+        "card": 1043801065,
+        "department": "IT",
+        "role": "Developer",
+        "fingerprints": {
+            "1": "template6",
+            "2": "template7"
+        }
+    },
+    {
+        "uid": 2,
+        "name": "John T. Peters",
+        "privilege": 0,
+        "password": "",
+        "group_id": "8055",
+        "user_id": "1685",
+        "card": 0,
+        "department": "Executive Dept",
+        "role": "Normal User",
+        "fingerprints": {
+            "1": "template0",
+            "2": "template8"
+        }
+    },
+    {
+        "uid": 5,
+        "name": "Deborah Borbor Teah",
+        "privilege": 0,
+        "password": "",
+        "group_id": "8055",
+        "user_id": "4389",
+        "card": 1043809067,
+        "department": "Finance",
+        "role": "CFO",
+        "fingerprints": {
+            "1": "template8"
+        }
+    }
+]
